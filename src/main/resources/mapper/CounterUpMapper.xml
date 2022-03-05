@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cas.dao.CounterUpMapper">
+
+    <resultMap id="result" type="com.cas.bean.CounterUpDO">
+        <result property="id" column="id"/>
+        <result property="counter" column="counter"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="columns">id, counter, update_time</sql>
+
+
+    <insert id="insert" parameterType="com.cas.bean.CounterUpDO">
+        insert into cas_canal_counter_up
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="counter != null">
+                counter,
+            </if>
+            update_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="counter != null">
+                #{counter,jdbcType=INTEGER},
+            </if>
+            sysdate(),
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.cas.bean.CounterUpDO" >
+        update cas_canal_counter_up
+        <set >
+            <if test="counter != null" >
+                counter = #{counter,jdbcType=INTEGER},
+            </if>
+            update_time = sysdate(),
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryById" parameterType="string" resultMap="result">
+        select
+        <include refid="columns"/>
+        from cas_canal_counter_up
+        where id = #{id}
+    </select>
+
+
+</mapper>
+
